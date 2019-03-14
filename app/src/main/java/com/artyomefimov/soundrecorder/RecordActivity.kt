@@ -49,7 +49,7 @@ class RecordActivity : AppCompatActivity() {
                 updateButtonState()
                 showToastIfFinished()
             } else {
-                toast("Permissions not granted!")
+                toast(R.string.permissions_not_granted)
             }
         }
     }
@@ -61,7 +61,7 @@ class RecordActivity : AppCompatActivity() {
 
     private fun showToastIfFinished() {
         if (buttonState == RecorderController.RecordButtonState.STOPPED)
-            toast("Recording was finished!")
+            toast(R.string.recording_finished)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

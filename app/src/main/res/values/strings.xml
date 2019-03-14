@@ -3,7 +3,7 @@
 
     <string name="header_name">Sound Recorder</string>
     <string name="button_start">Start</string>
-    <!--<string name="button_pause">Pause</string>-->
-    <!--<string name="button_resume">Resume</string>-->
     <string name="button_stop">Stop</string>
+    <string name="permissions_not_granted">Give the permissions to the sound recording and the storage access!</string>
+    <string name="recording_finished">Recording was finished!</string>
 </resources>

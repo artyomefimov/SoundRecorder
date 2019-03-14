@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Диктофон</string>
+
+    <string name="header_name">Диктофон</string>
+    <string name="button_start">Старт</string>
+    <string name="button_stop">Стоп</string>
+    <string name="permissions_not_granted">Выдайте приложению разрешения на запись звука и доступ к файлам!</string>
+    <string name="recording_finished">Запись завершена!</string>
+</resources>
