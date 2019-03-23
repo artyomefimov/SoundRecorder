@@ -6,4 +6,5 @@
     <string name="button_stop">Stop</string>
     <string name="permissions_not_granted">Give the permissions to the sound recording and the storage access!</string>
     <string name="recording_finished">Recording was finished!</string>
+    <string name="writing_to">Writing to</string>
 </resources>

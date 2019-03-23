@@ -1,13 +1,15 @@
-package com.artyomefimov.soundrecorder
+package com.artyomefimov.soundrecorder.controller
 
 import android.media.MediaRecorder
 import android.os.Environment
 import android.util.Log
+import com.artyomefimov.soundrecorder.R
+import com.artyomefimov.soundrecorder.getNameAccordingToDate
 import java.io.IOException
 
 object RecorderController {
     private var isFirst = true
-    lateinit var currentState: RecordButtonState
+    lateinit var state: RecordButtonState
 
     enum class RecordButtonState(val resourceId: Int) {
         STARTED(R.drawable.ic_action_pause),
@@ -18,14 +20,18 @@ object RecorderController {
 
     private var isRecording: Boolean = false
     private var mediaRecorder: MediaRecorder? = null
-    private var output: String? = null
+    var outputFilePath: String? = null
+    set(folderPath) {
+        field = "$folderPath"
+        resetMediaRecorder()
+    }
 
     fun init() {
         if (isFirst) {
-            output =
-                Environment.getExternalStorageDirectory().absolutePath + "/record.mp3"
+            outputFilePath = Environment.getExternalStorageDirectory().absolutePath
             resetMediaRecorder()
-            currentState = RecorderController.RecordButtonState.STOPPED
+            state =
+                RecorderController.RecordButtonState.STOPPED
             isFirst = false
         }
     }
@@ -39,10 +45,11 @@ object RecorderController {
 
     private fun resetMediaRecorder() {
         mediaRecorder = MediaRecorder()
+        Log.i(TAG, mediaRecorder?.toString())
         mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
         mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-        mediaRecorder?.setOutputFile(output)
+        mediaRecorder?.setOutputFile("$outputFilePath/${getNameAccordingToDate()}")
     }
 
     private fun startRecording() {
@@ -53,11 +60,13 @@ object RecorderController {
             isRecording = true
 
             Log.i(TAG, "Recording was started!")
-            currentState = RecorderController.RecordButtonState.STARTED
+            state =
+                RecorderController.RecordButtonState.STARTED
         } catch (e: IOException) {
             Log.i(TAG, "Could not start recording!")
             Log.e(TAG, e.localizedMessage)
-            currentState = RecorderController.RecordButtonState.STOPPED
+            state =
+                RecorderController.RecordButtonState.STOPPED
         }
     }
 
@@ -69,6 +78,7 @@ object RecorderController {
 
         Log.i(TAG, "Recording was stopped!")
 
-        currentState = RecorderController.RecordButtonState.STOPPED
+        state =
+            RecorderController.RecordButtonState.STOPPED
     }
 }

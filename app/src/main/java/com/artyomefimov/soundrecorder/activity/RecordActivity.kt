@@ -1,23 +1,28 @@
-package com.artyomefimov.soundrecorder
+package com.artyomefimov.soundrecorder.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
+import com.artyomefimov.soundrecorder.R
+import com.artyomefimov.soundrecorder.controller.RecorderController
+import com.codekidlabs.storagechooser.StorageChooser
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+
 
 class RecordActivity : AppCompatActivity() {
 
     companion object {
-        private const val REQUEST_CODE = 10
+        private const val PERMISSIONS_REQUEST_CODE = 123
     }
 
     private var isPermissionGranted: Boolean = false
-    private var buttonState: RecorderController.RecordButtonState = RecorderController.RecordButtonState.STOPPED
+    internal var buttonState: RecorderController.RecordButtonState =
+        RecorderController.RecordButtonState.STOPPED
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,44 +39,52 @@ class RecordActivity : AppCompatActivity() {
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
             )
 
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this, permissions,
+                PERMISSIONS_REQUEST_CODE
+            )
         } else {
             isPermissionGranted = true
         }
 
+        val storageChooser = StorageChooser.Builder()
+            .withActivity(this)
+            .withFragmentManager(fragmentManager)
+            .withPredefinedPath(Environment.getExternalStorageDirectory().absolutePath)
+            .allowCustomPath(true)
+            .setType(StorageChooser.DIRECTORY_CHOOSER)
+            .build()
+
+        storageChooser.setOnSelectListener {
+            RecorderController.outputFilePath = it
+            folder_path_view.text = getFolderPathViewText(it)
+        }
+
         RecorderController.init()
 
-        updateButtonState()
+        folder_path_view.text = getFolderPathViewText(RecorderController.outputFilePath)
 
-        button_record.setOnClickListener {
+        updateButtonsState()
+
+        record_button.setOnClickListener {
             if (isPermissionGranted) {
                 RecorderController.handleClick()
-                updateButtonState()
+                updateButtonsState()
                 showToastIfFinished()
             } else {
                 toast(R.string.permissions_not_granted)
             }
         }
-    }
 
-    private fun updateButtonState() {
-        buttonState = RecorderController.currentState
-        button_record.setImageResource(buttonState.resourceId)
-    }
-
-    private fun showToastIfFinished() {
-        if (buttonState == RecorderController.RecordButtonState.STOPPED)
-            toast(R.string.recording_finished)
+        choose_folder_button.setOnClickListener {
+            storageChooser.show()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == PERMISSIONS_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             isPermissionGranted = true
         }
-    }
-
-    private fun isPermissionNotGranted(permission: String): Boolean {
-        return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
     }
 }

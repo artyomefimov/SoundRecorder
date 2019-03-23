@@ -7,4 +7,5 @@
     <string name="button_stop">Стоп</string>
     <string name="permissions_not_granted">Выдайте приложению разрешения на запись звука и доступ к файлам!</string>
     <string name="recording_finished">Запись завершена!</string>
+    <string name="writing_to">Запись в</string>
 </resources>
