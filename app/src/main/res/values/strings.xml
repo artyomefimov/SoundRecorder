@@ -6,5 +6,18 @@
     <string name="button_stop">Stop</string>
     <string name="permissions_not_granted">Give the permissions to the sound recording and the storage access!</string>
     <string name="recording_finished">Recording was finished!</string>
-    <string name="writing_to">Writing to</string>
+    <string name="text_view_not_recording">Writing to %1$s. Tap to change.</string>
+    <string name="text_view_recording">Writing to %1$s</string>
+
+    <string name="picker_create">Create</string>
+    <string name="picker_internal_storage_text">Internal storage</string>
+    <string name="picker_cancel">Cancel</string>
+    <string name="picker_select">Select</string>
+    <string name="picker_overview_heading">Choose storage</string>
+    <string name="picker_create_folder">Create folder</string>
+    <string name="picker_free_disk_space">%s free</string>
+    <string name="picker_folder_created_toast">Folder created!</string>
+    <string name="picker_error_folder_creating">Error occurred while creating folder. Try again.</string>
+    <string name="picker_hint">Folder name</string>
+    <string name="picker_empty_folder_name_toast">Empty folder name!</string>
 </resources>

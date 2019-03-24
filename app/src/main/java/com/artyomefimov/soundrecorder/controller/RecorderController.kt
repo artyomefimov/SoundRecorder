@@ -8,6 +8,7 @@ import com.artyomefimov.soundrecorder.getNameAccordingToDate
 import java.io.IOException
 
 object RecorderController {
+    private const val TAG = "RecordActivity"
     private var isFirst = true
     lateinit var state: RecordButtonState
 
@@ -15,8 +16,6 @@ object RecorderController {
         STARTED(R.drawable.ic_action_pause),
         STOPPED(R.drawable.ic_action_play)
     }
-
-    private const val TAG = "RecordActivity"
 
     private var isRecording: Boolean = false
     private var mediaRecorder: MediaRecorder? = null
