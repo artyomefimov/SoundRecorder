@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SoundRecorder</string>
+    <string name="app_name">Sound Recorder</string>
 
     <string name="header_name">Sound Recorder</string>
     <string name="button_start">Start</string>
