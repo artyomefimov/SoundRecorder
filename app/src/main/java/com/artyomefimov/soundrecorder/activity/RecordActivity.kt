@@ -6,7 +6,6 @@ import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.controller.RecorderController
-import com.codekidlabs.storagechooser.StorageChooser
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
@@ -27,12 +26,13 @@ class RecordActivity : AppCompatActivity() {
 
         requestPermissionsIfNeeded()
 
+        buildContentForStorageChooser()
         var storageChooser =
             buildStorageChooserWithNewPath(Environment.getExternalStorageDirectory().absolutePath)
 
         storageChooser.setOnSelectListener {
             RecorderController.outputFilePath = it
-            folder_path_view.text = getFolderPathViewText(it)
+            folder_path_view.text = getStringWithFolderPath(it)
             storageChooser = buildStorageChooserWithNewPath(it)
         }
 

@@ -2,7 +2,6 @@ package com.artyomefimov.soundrecorder.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import com.artyomefimov.soundrecorder.R
@@ -12,14 +11,16 @@ import com.codekidlabs.storagechooser.StorageChooser
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
+private lateinit var content: Content
+
 fun RecordActivity.updateButtonsState() {
     buttonState = RecorderController.state
 
     record_button.setImageResource(buttonState.resourceId)
-    folder_path_view.text = getFolderPathViewText(RecorderController.outputFilePath)
+    folder_path_view.text = getStringWithFolderPath(RecorderController.outputFilePath)
 }
 
-fun RecordActivity.getFolderPathViewText(path: String?): String =
+fun RecordActivity.getStringWithFolderPath(path: String?): String =
     if (isNowNotRecording())
         resources.getString(R.string.text_view_not_recording, path)
     else
@@ -32,8 +33,8 @@ fun RecordActivity.showToastIfFinished() {
 
 fun RecordActivity.isNowNotRecording() = buttonState == RecorderController.RecordButtonState.STOPPED
 
-fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser {
-    val content = Content().apply {
+fun RecordActivity.buildContentForStorageChooser() {
+    content = Content().apply {
         createLabel = resources.getString(R.string.picker_create)
         internalStorageText = resources.getString(R.string.picker_internal_storage_text)
         cancelLabel = resources.getString(R.string.picker_cancel)
@@ -46,7 +47,9 @@ fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser
         textfieldHintText = resources.getString(R.string.picker_hint)
         textfieldErrorText = resources.getString(R.string.picker_empty_folder_name_toast)
     }
+}
 
+fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser {
     return StorageChooser.Builder()
         .withActivity(this)
         .withFragmentManager(fragmentManager)
