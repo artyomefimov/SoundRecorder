@@ -28,7 +28,6 @@ object RecorderController {
     fun init() {
         if (isFirst) {
             outputFilePath = Environment.getExternalStorageDirectory().absolutePath
-            resetMediaRecorder()
             state =
                 RecorderController.RecordButtonState.STOPPED
             isFirst = false
@@ -42,42 +41,48 @@ object RecorderController {
             stopRecording()
     }
 
-    private fun resetMediaRecorder() {
-        mediaRecorder = MediaRecorder()
-        Log.i(TAG, mediaRecorder?.toString())
-        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-        mediaRecorder?.setOutputFile("$outputFilePath/${getNameAccordingToDate()}")
-    }
-
     private fun startRecording() {
         try {
             resetMediaRecorder()
             mediaRecorder?.prepare()
             mediaRecorder?.start()
-            isRecording = true
 
-            Log.i(TAG, "Recording was started!")
+            isRecording = true
             state =
                 RecorderController.RecordButtonState.STARTED
+
+            Log.i(TAG, "Recording was started!")
         } catch (e: IOException) {
             Log.i(TAG, "Could not start recording!")
-            Log.e(TAG, e.localizedMessage)
+            Log.e(TAG, e.toString())
             state =
                 RecorderController.RecordButtonState.STOPPED
         }
     }
 
     private fun stopRecording() {
-        mediaRecorder?.stop()
+        try {
+            mediaRecorder?.stop()
+        } catch (e: RuntimeException) {
+            Log.e(TAG, e.toString())
+        }
+        mediaRecorder?.reset()
         mediaRecorder?.release()
         mediaRecorder = null
+
         isRecording = false
-
-        Log.i(TAG, "Recording was stopped!")
-
         state =
             RecorderController.RecordButtonState.STOPPED
+
+        Log.i(TAG, "Recording was stopped!")
+    }
+
+    private fun resetMediaRecorder() {
+        mediaRecorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFile("$outputFilePath/${getNameAccordingToDate()}")
+        }
     }
 }
