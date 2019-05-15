@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.controller.RecorderController
 import com.codekidlabs.storagechooser.Content
 import com.codekidlabs.storagechooser.StorageChooser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,27 +12,26 @@ import org.jetbrains.anko.toast
 
 private lateinit var content: Content
 
-fun RecordActivity.updateButtonsState() {
+internal fun RecordActivity.updateButtonsState() {
     buttonState = RecorderController.state
 
     record_button.setImageResource(buttonState.resourceId)
     folder_path_view.text = getStringWithFolderPath(RecorderController.outputFilePath)
 }
 
-fun RecordActivity.getStringWithFolderPath(path: String?): String =
+internal fun RecordActivity.getStringWithFolderPath(path: String?): String =
     if (isNowNotRecording())
         resources.getString(R.string.text_view_not_recording, path)
     else
         resources.getString(R.string.text_view_recording, path)
 
-fun RecordActivity.showToastIfFinished() {
-    if (isNowNotRecording())
-        toast(R.string.recording_finished)
+internal fun RecordActivity.showToastIfFinished() {
+    toast(R.string.recording_finished)
 }
 
-fun RecordActivity.isNowNotRecording() = buttonState == RecorderController.RecordButtonState.STOPPED
+internal fun RecordActivity.isNowNotRecording() = buttonState == RecorderController.RecordButtonState.STOPPED
 
-fun RecordActivity.buildContentForStorageChooser() {
+internal fun RecordActivity.buildContentForStorageChooser() {
     content = Content().apply {
         createLabel = resources.getString(R.string.picker_create)
         internalStorageText = resources.getString(R.string.picker_internal_storage_text)
@@ -49,7 +47,7 @@ fun RecordActivity.buildContentForStorageChooser() {
     }
 }
 
-fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser {
+internal fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser {
     return StorageChooser.Builder()
         .withActivity(this)
         .withFragmentManager(fragmentManager)
@@ -61,14 +59,14 @@ fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser
         .build()
 }
 
-fun RecordActivity.requestPermissionsIfNeeded() {
+internal fun RecordActivity.requestPermissionsIfNeeded() {
     if (isPermissionNotGranted(Manifest.permission.RECORD_AUDIO)
         && isPermissionNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     ) {
         val permissions = arrayOf(
-            android.Manifest.permission.RECORD_AUDIO,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
         ActivityCompat.requestPermissions(

@@ -1,11 +1,12 @@
 package com.artyomefimov.soundrecorder.activity
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.controller.RecorderController
+import com.artyomefimov.soundrecorder.service.RecordService
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
@@ -47,9 +48,20 @@ class RecordActivity : AppCompatActivity() {
 
         record_button.setOnClickListener {
             if (isPermissionGranted) {
-                RecorderController.handleClick()
+                val intent = Intent(this, RecordService::class.java)
+
+                val action = RecorderController.getNewAction()
+                intent.action = action
+
                 updateButtonsState()
-                showToastIfFinished()
+
+                if (isNowNotRecording()) {
+                    startService(intent)
+                    showToastIfFinished()
+                } else {
+                    intent.putExtra(RecordService.FILE_PATH, RecorderController.outputFilePath)
+                    startService(intent)
+                }
             } else {
                 toast(R.string.permissions_not_granted)
             }
