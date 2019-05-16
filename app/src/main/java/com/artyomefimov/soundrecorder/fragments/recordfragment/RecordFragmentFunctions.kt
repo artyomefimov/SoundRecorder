@@ -1,37 +1,39 @@
-package com.artyomefimov.soundrecorder.activity
+package com.artyomefimov.soundrecorder.fragments.recordfragment
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import com.artyomefimov.soundrecorder.R
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordFragment.Companion.PERMISSIONS_REQUEST_CODE
 import com.codekidlabs.storagechooser.Content
 import com.codekidlabs.storagechooser.StorageChooser
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.record_fragment.*
 import org.jetbrains.anko.toast
 
 private lateinit var content: Content
 
-internal fun RecordActivity.updateButtonsState() {
+internal fun RecordFragment.updateButtonsState() {
     buttonState = RecorderController.state
 
     record_button.setImageResource(buttonState.resourceId)
     folder_path_view.text = getStringWithFolderPath(RecorderController.outputFilePath)
 }
 
-internal fun RecordActivity.getStringWithFolderPath(path: String?): String =
+internal fun RecordFragment.getStringWithFolderPath(path: String?): String =
     if (isNowNotRecording())
         resources.getString(R.string.text_view_not_recording, path)
     else
         resources.getString(R.string.text_view_recording, path)
 
-internal fun RecordActivity.showToastIfFinished() {
-    toast(R.string.recording_finished)
+internal fun RecordFragment.showToastIfFinished() {
+    this.activity?.toast(R.string.recording_finished)
 }
 
-internal fun RecordActivity.isNowNotRecording() = buttonState == RecorderController.RecordButtonState.STOPPED
+internal fun RecordFragment.isNowNotRecording() = buttonState == RecorderController.RecordButtonState.STOPPED
 
-internal fun RecordActivity.buildContentForStorageChooser() {
+internal fun RecordFragment.buildContentForStorageChooser() {
     content = Content().apply {
         createLabel = resources.getString(R.string.picker_create)
         internalStorageText = resources.getString(R.string.picker_internal_storage_text)
@@ -47,10 +49,10 @@ internal fun RecordActivity.buildContentForStorageChooser() {
     }
 }
 
-internal fun RecordActivity.buildStorageChooserWithNewPath(path: String?): StorageChooser {
+internal fun RecordFragment.buildStorageChooserWithNewPath(path: String?): StorageChooser {
     return StorageChooser.Builder()
-        .withActivity(this)
-        .withFragmentManager(fragmentManager)
+        .withActivity(this.activity)
+        .withFragmentManager(this.activity?.fragmentManager)
         .allowCustomPath(true)
         .setType(StorageChooser.DIRECTORY_CHOOSER)
         .withMemoryBar(true)
@@ -59,7 +61,7 @@ internal fun RecordActivity.buildStorageChooserWithNewPath(path: String?): Stora
         .build()
 }
 
-internal fun RecordActivity.requestPermissionsIfNeeded() {
+internal fun RecordFragment.requestPermissionsIfNeeded() {
     if (isPermissionNotGranted(Manifest.permission.RECORD_AUDIO)
         && isPermissionNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     ) {
@@ -70,15 +72,16 @@ internal fun RecordActivity.requestPermissionsIfNeeded() {
         )
 
         ActivityCompat.requestPermissions(
-            this, permissions,
-            RecordActivity.PERMISSIONS_REQUEST_CODE
+            this.activity as Activity,
+            permissions,
+            PERMISSIONS_REQUEST_CODE
         )
     } else {
         isPermissionGranted = true
     }
 }
 
-private fun RecordActivity.isPermissionNotGranted(permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
+private fun RecordFragment.isPermissionNotGranted(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(this.activity as Activity, permission) != PackageManager.PERMISSION_GRANTED
 }
 

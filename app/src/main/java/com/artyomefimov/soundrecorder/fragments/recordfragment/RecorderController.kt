@@ -1,4 +1,4 @@
-package com.artyomefimov.soundrecorder.activity
+package com.artyomefimov.soundrecorder.fragments.recordfragment
 
 import android.os.Environment
 import com.artyomefimov.soundrecorder.R

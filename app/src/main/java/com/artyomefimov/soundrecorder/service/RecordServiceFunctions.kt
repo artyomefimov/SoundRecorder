@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.activity.RecordActivity
-import com.artyomefimov.soundrecorder.activity.RecorderController
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecorderController
 import java.io.IOException
 import java.util.*
 

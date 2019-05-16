@@ -1,77 +1,55 @@
 package com.artyomefimov.soundrecorder.activity
 
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.service.RecordService
+import com.artyomefimov.soundrecorder.fragments.filesfragment.FilesFragment
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
 
-
-class RecordActivity : AppCompatActivity() {
+class RecordActivity : FragmentActivity() {
+    private val fragmentManager = supportFragmentManager
 
     companion object {
-        internal const val PERMISSIONS_REQUEST_CODE = 123
+        private const val RECORD_FRAGMENT = "record_fragment"
+        private const val FILES_FRAGMENT = "files_fragment"
     }
-
-    internal var isPermissionGranted: Boolean = false
-    internal var buttonState: RecorderController.RecordButtonState =
-        RecorderController.RecordButtonState.STOPPED
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        actionBar?.show()
+        callRecordFragment()
 
-        requestPermissionsIfNeeded()
-
-        buildContentForStorageChooser()
-        var storageChooser =
-            buildStorageChooserWithNewPath(Environment.getExternalStorageDirectory().absolutePath)
-
-        storageChooser.setOnSelectListener {
-            RecorderController.outputFilePath = it
-            folder_path_view.text = getStringWithFolderPath(it)
-            storageChooser = buildStorageChooserWithNewPath(it)
-        }
-
-        folder_path_view.setOnClickListener {
-            if (isNowNotRecording())
-                storageChooser.show()
-        }
-
-        RecorderController.init()
-
-        updateButtonsState()
-
-        record_button.setOnClickListener {
-            if (isPermissionGranted) {
-                val intent = Intent(this, RecordService::class.java)
-
-                val action = RecorderController.getNewAction()
-                intent.action = action
-
-                updateButtonsState()
-
-                if (isNowNotRecording()) {
-                    startService(intent)
-                    showToastIfFinished()
-                } else {
-                    intent.putExtra(RecordService.FILE_PATH, RecorderController.outputFilePath)
-                    startService(intent)
-                }
-            } else {
-                toast(R.string.permissions_not_granted)
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.action_record -> callRecordFragment()
+                R.id.action_files -> callFilesFragment()
             }
+
+            return@setOnNavigationItemSelectedListener true
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            isPermissionGranted = true
+    private fun callRecordFragment() {
+        var fragment = fragmentManager.findFragmentByTag(RECORD_FRAGMENT)
+
+        if (fragment == null) {
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragment = RecordFragment()
+            fragmentTransaction.replace(R.id.fragment_container, fragment, RECORD_FRAGMENT)
+            fragmentTransaction.commit()
+        }
+    }
+
+    private fun callFilesFragment() {
+        var fragment = fragmentManager.findFragmentByTag(FILES_FRAGMENT)
+
+        if (fragment == null) {
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragment = FilesFragment()
+            fragmentTransaction.replace(R.id.fragment_container, fragment, FILES_FRAGMENT)
+            fragmentTransaction.commit()
         }
     }
 }

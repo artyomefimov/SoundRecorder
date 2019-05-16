@@ -21,4 +21,7 @@
     <string name="picker_error_folder_creating">Не удалось создать папку! Попробуйте снова</string>
     <string name="picker_hint">Название папки</string>
     <string name="picker_empty_folder_name_toast">Папка без названия!</string>
+
+    <string name="record">Запись</string>
+    <string name="files">Файлы</string>
 </resources>

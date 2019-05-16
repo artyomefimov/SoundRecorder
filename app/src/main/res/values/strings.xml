@@ -20,4 +20,7 @@
     <string name="picker_error_folder_creating">Error occurred while creating folder. Try again.</string>
     <string name="picker_hint">Folder name</string>
     <string name="picker_empty_folder_name_toast">Empty folder name!</string>
+
+    <string name="record">Record</string>
+    <string name="files">Files</string>
 </resources>
