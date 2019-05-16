@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artyomefimov.soundrecorder.R
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecorderController
 import com.artyomefimov.soundrecorder.model.FileInfo
 import kotlinx.android.synthetic.main.list_item_file.view.*
 
@@ -25,7 +26,7 @@ class FilesAdapter(private val files: List<FileInfo>, private val listener: List
         fun bind(fileInfo: FileInfo, listener: Listener) {
             with(itemView) {
                 file_name.text = fileInfo.name
-                file_extension.text = getExtensionFromFileName(fileInfo.name)
+                file_folder.text = RecorderController.outputFilePath
 
                 setOnClickListener {
                     listener.onClickItem(fileInfo)

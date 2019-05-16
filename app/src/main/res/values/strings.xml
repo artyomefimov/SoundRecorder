@@ -23,4 +23,6 @@
 
     <string name="record">Record</string>
     <string name="files">Files</string>
+
+    <string name="folder_info_text">Audio files from %1$s</string>
 </resources>

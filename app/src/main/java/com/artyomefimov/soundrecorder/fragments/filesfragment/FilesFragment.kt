@@ -10,10 +10,10 @@ import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.fragments.recordfragment.RecorderController
 import com.artyomefimov.soundrecorder.model.FileInfo
 import kotlinx.android.synthetic.main.files_fragment.*
+import org.jetbrains.anko.toast
 import java.io.File
-import java.util.*
 
-class FilesFragment: Fragment() {
+class FilesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.files_fragment, container, false)
     }
@@ -27,6 +27,7 @@ class FilesFragment: Fragment() {
         files_list.adapter = FilesAdapter(files, object : FilesAdapter.Listener {
             override fun onClickItem(fileInfo: FileInfo) {
                 // todo call service that plays music file
+                this@FilesFragment.activity?.toast("Playing a file")
             }
         })
     }

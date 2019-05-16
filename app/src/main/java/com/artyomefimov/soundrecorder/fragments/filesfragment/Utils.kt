@@ -15,7 +15,7 @@ fun fetchMusicFilesFromFolder(folderPath: File): List<FileInfo> {
     folderPath.list().forEach {filename ->
         musicExtensions.forEach {extension ->
             if (extension == getExtensionFromFileName(filename))
-                musicFiles.add(FileInfo(extension))
+                musicFiles.add(FileInfo(filename, extension))
         }
     }
     return musicFiles

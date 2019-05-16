@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
-                                             android:minHeight="43dp"
-                                             android:orientation="vertical"
+                                             android:minHeight="65dp"
+                                             android:orientation="horizontal"
                                              android:padding="0dp"
                                              android:clickable="true"
                                              android:focusable="true"
@@ -12,7 +12,7 @@
     <android.support.v7.widget.CardView
             android:id="@+id/card_view_file"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:clipToPadding="false"
             android:clipChildren="false"
             android:layout_marginLeft="0dp"
@@ -21,35 +21,56 @@
             android:layout_marginBottom="0dp"
             android:paddingBottom="0dp"
             android:paddingTop="0dp"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="4dp"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp"
             app:cardUseCompatPadding="true">
 
         <LinearLayout
-                android:id="@+id/title_and_extension"
+                android:id="@+id/file_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="horizontal">
 
-            <TextView
-                    android:id="@+id/file_name"
+            <ImageView
+                    android:id="@+id/file_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"/>
+                    android:src="@drawable/ic_note"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                    android:id="@+id/file_extension"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"/>
+            <LinearLayout
+                    android:id="@+id/title_and_extension"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/file_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintLeft_toLeftOf="@id/file_logo"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                        android:id="@+id/file_folder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="@id/file_logo"
+                        app:layout_constraintTop_toTopOf="@id/file_name"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
