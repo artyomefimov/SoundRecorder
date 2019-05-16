@@ -5,7 +5,7 @@
                                              xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_files_list"
+            android:id="@+id/files_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
