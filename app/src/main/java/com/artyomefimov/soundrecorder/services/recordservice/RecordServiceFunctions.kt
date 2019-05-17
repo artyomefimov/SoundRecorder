@@ -32,7 +32,7 @@ internal fun RecordService.createNotification(): Notification {
         RecordService.CHANNEL_ID
     )
         .setContentIntent(pendingIntent)
-        .setContentTitle("Recording...")
+        .setContentTitle(resources.getString(R.string.recording_in_progress))
         .setSmallIcon(R.mipmap.ic_launcher_foreground)
         .setAutoCancel(false)
         .build()
