@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.service.RecordService
+import com.artyomefimov.soundrecorder.services.recordservice.RecordService
 import kotlinx.android.synthetic.main.record_fragment.*
 import org.jetbrains.anko.toast
 
@@ -19,8 +19,8 @@ class RecordFragment: Fragment() {
     }
 
     internal var isPermissionGranted: Boolean = false
-    internal var buttonState: RecorderController.RecordButtonState =
-        RecorderController.RecordButtonState.STOPPED
+    internal var buttonState: Controller.RecordButtonState =
+        Controller.RecordButtonState.STOPPED
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.record_fragment, container, false)
@@ -35,12 +35,12 @@ class RecordFragment: Fragment() {
         var storageChooser =
             buildStorageChooserWithNewPath(Environment.getExternalStorageDirectory().absolutePath)
 
-        RecorderController.init()
+        Controller.init()
 
         updateButtonsState()
 
         storageChooser.setOnSelectListener {
-            RecorderController.outputFilePath = it
+            Controller.outputFilePath = it
             folder_path_view.text = getStringWithFolderPath(it)
             storageChooser = buildStorageChooserWithNewPath(it)
         }
@@ -54,8 +54,7 @@ class RecordFragment: Fragment() {
             if (isPermissionGranted) {
                 val intent = Intent(this.activity, RecordService::class.java)
 
-                val action = RecorderController.getNewAction()
-                intent.action = action
+                intent.action = Controller.getNewRecordAction()
 
                 updateButtonsState()
 
@@ -63,7 +62,7 @@ class RecordFragment: Fragment() {
                     this.activity?.startService(intent)
                     showToastIfFinished()
                 } else {
-                    intent.putExtra(RecordService.FILE_PATH, RecorderController.outputFilePath)
+                    intent.putExtra(RecordService.FILE_PATH, Controller.outputFilePath)
                     this.activity?.startService(intent)
                 }
             } else {

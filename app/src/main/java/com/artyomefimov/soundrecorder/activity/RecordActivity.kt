@@ -2,10 +2,7 @@ package com.artyomefimov.soundrecorder.activity
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
-import android.view.Window
-import android.widget.Toolbar
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.fragments.filesfragment.FilesFragment
 import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordFragment
@@ -17,15 +14,19 @@ class RecordActivity : AppCompatActivity() {
     companion object {
         private const val RECORD_FRAGMENT = "record_fragment"
         private const val FILES_FRAGMENT = "files_fragment"
+        const val PLAYING = "playing"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        callRecordFragment()
+        when (intent?.action) {
+            PLAYING -> callFilesFragment()
+            else -> callRecordFragment()
+        }
 
         bottom_navigation.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.action_record -> callRecordFragment()
                 R.id.action_files -> callFilesFragment()
             }

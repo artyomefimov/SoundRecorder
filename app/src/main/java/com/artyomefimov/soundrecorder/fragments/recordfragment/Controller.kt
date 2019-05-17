@@ -2,9 +2,10 @@ package com.artyomefimov.soundrecorder.fragments.recordfragment
 
 import android.os.Environment
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.service.RecordService
+import com.artyomefimov.soundrecorder.services.playservice.PlayService
+import com.artyomefimov.soundrecorder.services.recordservice.RecordService
 
-object RecorderController {
+object Controller {
     private var isFirst = true
     lateinit var state: RecordButtonState
 
@@ -13,7 +14,8 @@ object RecorderController {
         STOPPED(R.drawable.ic_action_play)
     }
 
-    private var isRecording: Boolean = false
+    private var isRecording = false
+    private var isPlaying = false
     var outputFilePath: String? = null
         set(folderPath) {
             field = "$folderPath"
@@ -23,12 +25,12 @@ object RecorderController {
         if (isFirst) {
             outputFilePath = Environment.getExternalStorageDirectory().absolutePath
             state =
-                RecorderController.RecordButtonState.STOPPED
+                Controller.RecordButtonState.STOPPED
             isFirst = false
         }
     }
 
-    fun getNewAction(): String {
+    fun getNewRecordAction(): String {
         return if (!isRecording) {
             startRecording()
             RecordService.ACTION_START_RECORD
@@ -38,15 +40,22 @@ object RecorderController {
         }
     }
 
+    fun getNewPlayAction(): String {
+        return if (!isPlaying)
+            PlayService.ACTION_START_PLAY
+        else
+            PlayService.ACTION_STOP_PLAY
+    }
+
     private fun startRecording() {
         isRecording = true
         state =
-            RecorderController.RecordButtonState.STARTED
+            Controller.RecordButtonState.STARTED
     }
 
     private fun stopRecording() {
         isRecording = false
         state =
-            RecorderController.RecordButtonState.STOPPED
+            Controller.RecordButtonState.STOPPED
     }
 }

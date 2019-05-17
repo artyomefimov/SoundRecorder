@@ -1,5 +1,6 @@
 package com.artyomefimov.soundrecorder.fragments.filesfragment
 
+import com.artyomefimov.soundrecorder.fragments.recordfragment.Controller
 import com.artyomefimov.soundrecorder.model.FileInfo
 import java.io.File
 
@@ -15,7 +16,7 @@ fun fetchMusicFilesFromFolder(folderPath: File): List<FileInfo> {
     folderPath.list().forEach {filename ->
         musicExtensions.forEach {extension ->
             if (extension == getExtensionFromFileName(filename))
-                musicFiles.add(FileInfo(filename, extension))
+                musicFiles.add(FileInfo(filename, Controller.outputFilePath!!))
         }
     }
     return musicFiles

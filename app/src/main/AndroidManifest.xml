@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.RecordService"/>
+        <service android:name=".services.recordservice.RecordService"/>
+        <service android:name=".services.playservice.PlayService"/>
     </application>
 
 </manifest>

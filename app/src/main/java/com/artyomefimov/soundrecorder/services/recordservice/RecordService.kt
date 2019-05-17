@@ -1,4 +1,4 @@
-package com.artyomefimov.soundrecorder.service
+package com.artyomefimov.soundrecorder.services.recordservice
 
 import android.app.Service
 import android.content.Intent
@@ -7,14 +7,14 @@ import android.os.IBinder
 import android.util.Log
 
 class RecordService : Service() {
-    internal val TAG = "RecordService"
     internal var mediaRecorder: MediaRecorder? = null
 
-    companion object Constants {
+    companion object {
+        internal const val TAG = "RecordService"
         internal const val REQUEST_CODE_ACTIVITY = 121
         private const val REQUEST_CODE_FOREGROUND = 242
-        internal const val CHANNEL_ID = "com.artyomefimov.soundrecorder.service.RecordService"
-        internal const val CHANNEL_NAME = "SoundRecorder app notifications"
+        internal const val CHANNEL_ID = "com.artyomefimov.soundrecorder.services.recordservice.RecordService"
+        internal const val CHANNEL_NAME = "SoundRecorder record"
 
         const val ACTION_START_RECORD = "start_record"
         const val ACTION_STOP_RECORD = "stop_record"
@@ -35,10 +35,10 @@ class RecordService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun start(intent: Intent?) {
-        Log.d(TAG, "Starting service...")
+    private fun start(intent: Intent) {
+        Log.d(TAG, "Starting record service...")
 
-        val extras = intent?.extras ?: return
+        val extras = intent.extras ?: return
         val filePath = extras.get(FILE_PATH) as String
 
         val notification = createNotification()
@@ -48,7 +48,7 @@ class RecordService : Service() {
     }
 
     private fun stop() {
-        Log.d(TAG, "Stopping service...")
+        Log.d(TAG, "Stopping record service...")
 
         stopForeground(true)
         stopRecording()

@@ -1,4 +1,4 @@
-package com.artyomefimov.soundrecorder.service
+package com.artyomefimov.soundrecorder.services.recordservice
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,9 +11,10 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.activity.RecordActivity
-import com.artyomefimov.soundrecorder.fragments.recordfragment.RecorderController
+import com.artyomefimov.soundrecorder.fragments.recordfragment.Controller
+import com.artyomefimov.soundrecorder.services.getNameAccordingToDate
+import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Companion.TAG
 import java.io.IOException
-import java.util.*
 
 internal fun RecordService.createNotification(): Notification {
     val intent = Intent(this, RecordActivity::class.java)
@@ -26,7 +27,10 @@ internal fun RecordService.createNotification(): Notification {
 
     createNotificationChannel()
 
-    return NotificationCompat.Builder(this, RecordService.CHANNEL_ID)
+    return NotificationCompat.Builder(
+        this,
+        RecordService.CHANNEL_ID
+    )
         .setContentIntent(pendingIntent)
         .setContentTitle("Recording...")
         .setSmallIcon(R.drawable.ic_notification_icon)
@@ -55,8 +59,8 @@ internal fun RecordService.startRecording(filePath: String) {
         }
     } catch (e: IOException) {
         Log.e(TAG, "Could not start recording!\n$e")
-        RecorderController.state =
-            RecorderController.RecordButtonState.STOPPED
+        Controller.state =
+            Controller.RecordButtonState.STOPPED
     }
     Log.i(TAG, "Recording was started!")
 }
@@ -68,12 +72,6 @@ private fun RecordService.resetMediaRecorder(filePath: String) {
         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
         setOutputFile("$filePath/${getNameAccordingToDate()}")
     }
-}
-
-private fun getNameAccordingToDate(): String {
-    val calendar: Calendar = Calendar.getInstance()
-    return "${calendar[Calendar.DAY_OF_MONTH]}-${calendar[Calendar.MONTH]}-${calendar[Calendar.YEAR]}" +
-            "_${calendar[Calendar.HOUR_OF_DAY]}.${calendar[Calendar.MINUTE]}.${calendar[Calendar.SECOND]}.mp3"
 }
 
 internal fun RecordService.stopRecording() {
@@ -88,8 +86,8 @@ internal fun RecordService.stopRecording() {
     }
     mediaRecorder = null
 
-    RecorderController.state =
-        RecorderController.RecordButtonState.STOPPED
+    Controller.state =
+        Controller.RecordButtonState.STOPPED
 
     Log.i(TAG, "Recording was stopped!")
 }
