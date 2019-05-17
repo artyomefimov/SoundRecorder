@@ -5,20 +5,21 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.activity.RecordActivity
+import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_PAUSE
+import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_PLAY
+import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_STOP
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.CHANNEL_ID
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.CHANNEL_NAME
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.REQUEST_CODE_ACTIVITY
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.TAG
 
-internal fun PlayService.createNotification(): Notification {
+internal fun PlayService.createNotification(fileName: String): Notification {
     val intent = Intent(this, RecordActivity::class.java)
     intent.action = RecordActivity.PLAYING
 
@@ -35,10 +36,31 @@ internal fun PlayService.createNotification(): Notification {
         CHANNEL_ID
     )
         .setContentIntent(pendingIntent)
-        .setContentTitle("Playing...")
-        .setSmallIcon(R.drawable.ic_notification_icon)
+        .setContentTitle(fileName)
+        .setSmallIcon(R.mipmap.ic_launcher_foreground)
         .setAutoCancel(false)
+        .addAction(
+            android.R.drawable.ic_media_pause,
+            resources.getString(R.string.pause),
+            createNotificationActionIntent(ACTION_NOTIFICATION_PAUSE)
+        )
+        .addAction(
+            android.R.drawable.ic_media_play,
+            resources.getString(R.string.play),
+            createNotificationActionIntent(ACTION_NOTIFICATION_PLAY)
+        )
+        .addAction(
+            R.drawable.ic_media_stop,
+            resources.getString(R.string.stop),
+            createNotificationActionIntent(ACTION_NOTIFICATION_STOP)
+        )
         .build()
+}
+
+internal fun PlayService.createNotificationActionIntent(action: String): PendingIntent {
+    val intent = Intent(this, PlayService::class.java)
+    intent.action = action
+    return PendingIntent.getService(this, 0, intent, 0)
 }
 
 private fun PlayService.createNotificationChannel() {
@@ -53,21 +75,21 @@ private fun PlayService.createNotificationChannel() {
     }
 }
 
-internal fun PlayService.startPlaying(fileName: String) {
-    try {
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(fileName)
-            setAudioStreamType(AudioManager.STREAM_MUSIC)
-            prepare()
-            start()
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
+internal fun PlayService.startPlaying(filePath: String) {
+    mediaPlayer?.let {
+        if (it.isPlaying)
+            stopPlaying()
+    }
+
+    mediaPlayer = MediaPlayer().apply {
+        setDataSource(filePath)
+        prepare()
+        start()
     }
     Log.i(TAG, "Playing was started!")
 }
 
-internal fun PlayService.stopPlaying() {
+private fun PlayService.stopPlaying() {
     mediaPlayer?.apply {
         stop()
         reset()
@@ -76,4 +98,26 @@ internal fun PlayService.stopPlaying() {
     mediaPlayer = null
 
     Log.i(TAG, "Playing was stopped!")
+}
+
+internal fun PlayService.pausePlaying() {
+    mediaPlayer?.let {
+        if (it.isPlaying)
+            it.pause()
+        Log.i(TAG, "Playing was paused!")
+    }
+}
+
+internal fun PlayService.continuePlaying() {
+    mediaPlayer?.let {
+        if (!it.isPlaying)
+            it.start()
+        Log.i(TAG, "Playing was continued!")
+    }
+}
+
+internal fun PlayService.stopService() {
+    stopForeground(true)
+    stopPlaying()
+    stopSelf()
 }

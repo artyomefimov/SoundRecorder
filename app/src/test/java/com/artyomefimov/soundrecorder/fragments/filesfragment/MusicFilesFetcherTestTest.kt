@@ -8,7 +8,6 @@ import org.junit.Test
 import java.io.File
 
 class MusicFilesFetcherTestTest {
-
     private val emptyFolderFiles = ArrayList<String>()
 
     private val onlyFormatFolderFiles = ArrayList<String>().apply {
@@ -44,6 +43,10 @@ class MusicFilesFetcherTestTest {
         whenever(emptyFolder.list()).thenReturn(emptyFolderFiles.toTypedArray())
         whenever(onlyFormatFolder.list()).thenReturn(onlyFormatFolderFiles.toTypedArray())
         whenever(multipleFormatFolder.list()).thenReturn(multipleFormatFolderFiles.toTypedArray())
+
+        whenever(emptyFolder.absolutePath).thenReturn("emptyFolder")
+        whenever(onlyFormatFolder.absolutePath).thenReturn("onlyFormatFolder")
+        whenever(multipleFormatFolder.absolutePath).thenReturn("multipleFormatFolder")
     }
 
     @Test

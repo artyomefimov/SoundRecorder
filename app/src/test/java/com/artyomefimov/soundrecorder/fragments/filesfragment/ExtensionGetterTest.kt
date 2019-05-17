@@ -4,7 +4,6 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ExtensionGetterTest{
-
     @Test
     fun getCorrectExtensionFromFilenameWithOnePoint() {
         val filename = "a12123d.awe"

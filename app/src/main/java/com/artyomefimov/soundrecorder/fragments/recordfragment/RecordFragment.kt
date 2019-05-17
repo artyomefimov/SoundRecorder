@@ -13,14 +13,14 @@ import com.artyomefimov.soundrecorder.services.recordservice.RecordService
 import kotlinx.android.synthetic.main.record_fragment.*
 import org.jetbrains.anko.toast
 
-class RecordFragment: Fragment() {
+class RecordFragment : Fragment() {
     companion object {
         internal const val PERMISSIONS_REQUEST_CODE = 123
     }
 
     internal var isPermissionGranted: Boolean = false
-    internal var buttonState: Controller.RecordButtonState =
-        Controller.RecordButtonState.STOPPED
+    internal var buttonState: RecordController.RecordButtonState =
+        RecordController.RecordButtonState.STOPPED
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.record_fragment, container, false)
@@ -35,12 +35,12 @@ class RecordFragment: Fragment() {
         var storageChooser =
             buildStorageChooserWithNewPath(Environment.getExternalStorageDirectory().absolutePath)
 
-        Controller.init()
+        RecordController.init()
 
         updateButtonsState()
 
         storageChooser.setOnSelectListener {
-            Controller.outputFilePath = it
+            RecordController.outputFilePath = it
             folder_path_view.text = getStringWithFolderPath(it)
             storageChooser = buildStorageChooserWithNewPath(it)
         }
@@ -54,7 +54,7 @@ class RecordFragment: Fragment() {
             if (isPermissionGranted) {
                 val intent = Intent(this.activity, RecordService::class.java)
 
-                intent.action = Controller.getNewRecordAction()
+                intent.action = RecordController.getNewRecordAction()
 
                 updateButtonsState()
 
@@ -62,7 +62,7 @@ class RecordFragment: Fragment() {
                     this.activity?.startService(intent)
                     showToastIfFinished()
                 } else {
-                    intent.putExtra(RecordService.FILE_PATH, Controller.outputFilePath)
+                    intent.putExtra(RecordService.FILE_PATH, RecordController.outputFilePath)
                     this.activity?.startService(intent)
                 }
             } else {

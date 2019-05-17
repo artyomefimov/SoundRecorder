@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.fragments.recordfragment.Controller
 import com.artyomefimov.soundrecorder.model.FileInfo
 import kotlinx.android.synthetic.main.list_item_file.view.*
 
-class FilesAdapter(private val files: List<FileInfo>, private val listener: Listener):
+class FilesAdapter(private val files: List<FileInfo>, private val listener: Listener) :
     RecyclerView.Adapter<FilesAdapter.FilesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesViewHolder {
@@ -20,13 +19,13 @@ class FilesAdapter(private val files: List<FileInfo>, private val listener: List
 
     override fun getItemCount(): Int = files.size
 
-    override fun onBindViewHolder(holder: FilesViewHolder, position: Int) = holder.bind(files[position],listener)
+    override fun onBindViewHolder(holder: FilesViewHolder, position: Int) = holder.bind(files[position], listener)
 
     class FilesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(fileInfo: FileInfo, listener: Listener) {
             with(itemView) {
                 file_name.text = fileInfo.name
-                file_folder.text = Controller.outputFilePath
+                file_folder.text = fileInfo.folder
 
                 setOnClickListener {
                     listener.onClickItem(fileInfo)

@@ -25,5 +25,7 @@
     <string name="record">Запись</string>
     <string name="files">Файлы</string>
 
-    <string name="folder_info_text">Аудиофайлы из %1$s</string>
+    <string name="stop">Остановить</string>
+    <string name="pause">Пауза</string>
+    <string name="play">Возобновить</string>
 </resources>

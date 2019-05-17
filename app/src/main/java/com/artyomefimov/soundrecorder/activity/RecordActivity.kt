@@ -21,34 +21,26 @@ class RecordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         when (intent?.action) {
-            PLAYING -> callFilesFragment()
-            else -> callRecordFragment()
+            PLAYING -> callFragmentByTag(FILES_FRAGMENT)
+            else -> callFragmentByTag(RECORD_FRAGMENT)
         }
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.action_record -> callRecordFragment()
-                R.id.action_files -> callFilesFragment()
+                R.id.action_record -> callFragmentByTag(RECORD_FRAGMENT)
+                R.id.action_files -> callFragmentByTag(FILES_FRAGMENT)
             }
 
             return@setOnNavigationItemSelectedListener true
         }
     }
 
-    private fun callRecordFragment() {
-        var fragment = fragmentManager.findFragmentByTag(RECORD_FRAGMENT)
+    private fun callFragmentByTag(tag: String) {
+        var fragment = fragmentManager.findFragmentByTag(tag)
         if (fragment == null)
-            fragment = RecordFragment()
+            fragment = if (tag == FILES_FRAGMENT) FilesFragment() else RecordFragment()
 
-        performFragmentTransaction(fragment, RECORD_FRAGMENT)
-    }
-
-    private fun callFilesFragment() {
-        var fragment = fragmentManager.findFragmentByTag(FILES_FRAGMENT)
-        if (fragment == null)
-            fragment = FilesFragment()
-
-        performFragmentTransaction(fragment, FILES_FRAGMENT)
+        performFragmentTransaction(fragment, tag)
     }
 
     private fun performFragmentTransaction(fragment: Fragment, tag: String) {

@@ -15,10 +15,10 @@ import org.jetbrains.anko.toast
 private lateinit var content: Content
 
 internal fun RecordFragment.updateButtonsState() {
-    buttonState = Controller.state
+    buttonState = RecordController.state
 
     record_button.setImageResource(buttonState.resourceId)
-    folder_path_view.text = getStringWithFolderPath(Controller.outputFilePath)
+    folder_path_view.text = getStringWithFolderPath(RecordController.outputFilePath)
 }
 
 internal fun RecordFragment.getStringWithFolderPath(path: String?): String =
@@ -31,7 +31,7 @@ internal fun RecordFragment.showToastIfFinished() {
     this.activity?.toast(R.string.recording_finished)
 }
 
-internal fun RecordFragment.isNowNotRecording() = buttonState == Controller.RecordButtonState.STOPPED
+internal fun RecordFragment.isNowNotRecording() = buttonState == RecordController.RecordButtonState.STOPPED
 
 internal fun RecordFragment.buildContentForStorageChooser() {
     content = Content().apply {

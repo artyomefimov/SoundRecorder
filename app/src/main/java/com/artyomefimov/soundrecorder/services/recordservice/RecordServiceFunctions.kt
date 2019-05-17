@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.activity.RecordActivity
-import com.artyomefimov.soundrecorder.fragments.recordfragment.Controller
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordController
 import com.artyomefimov.soundrecorder.services.getNameAccordingToDate
 import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Companion.TAG
 import java.io.IOException
@@ -33,7 +33,7 @@ internal fun RecordService.createNotification(): Notification {
     )
         .setContentIntent(pendingIntent)
         .setContentTitle("Recording...")
-        .setSmallIcon(R.drawable.ic_notification_icon)
+        .setSmallIcon(R.mipmap.ic_launcher_foreground)
         .setAutoCancel(false)
         .build()
 }
@@ -59,8 +59,8 @@ internal fun RecordService.startRecording(filePath: String) {
         }
     } catch (e: IOException) {
         Log.e(TAG, "Could not start recording!\n$e")
-        Controller.state =
-            Controller.RecordButtonState.STOPPED
+        RecordController.state =
+            RecordController.RecordButtonState.STOPPED
     }
     Log.i(TAG, "Recording was started!")
 }
@@ -86,8 +86,8 @@ internal fun RecordService.stopRecording() {
     }
     mediaRecorder = null
 
-    Controller.state =
-        Controller.RecordButtonState.STOPPED
+    RecordController.state =
+        RecordController.RecordButtonState.STOPPED
 
     Log.i(TAG, "Recording was stopped!")
 }

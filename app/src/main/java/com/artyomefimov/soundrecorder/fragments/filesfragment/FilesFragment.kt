@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.fragments.recordfragment.Controller
+import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordController
 import com.artyomefimov.soundrecorder.model.FileInfo
 import com.artyomefimov.soundrecorder.services.playservice.PlayService
 import kotlinx.android.synthetic.main.files_fragment.*
@@ -22,18 +22,18 @@ class FilesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val files = fetchMusicFilesFromFolder(File(Controller.outputFilePath)) // todo to background
+        val files = fetchMusicFilesFromFolder(File(RecordController.outputFilePath)) // todo to background
 
         files_list.layoutManager = LinearLayoutManager(this.activity)
+
         files_list.adapter = FilesAdapter(files, object : FilesAdapter.Listener {
             override fun onClickItem(fileInfo: FileInfo) {
                 val intent = Intent(this@FilesFragment.activity, PlayService::class.java)
-                val action = Controller.getNewPlayAction()
-                intent.action = action
+                intent.action = PlayService.ACTION_START_PLAY
 
-                if (PlayService.ACTION_START_PLAY == action) {
-                    intent.putExtra(PlayService.FILE_PATH, fileInfo.folder + File.separator + fileInfo.name)
-                }
+                intent.putExtra(PlayService.FILE_NAME, fileInfo.name)
+                intent.putExtra(PlayService.FILE_PATH, fileInfo.folder)
+
                 this@FilesFragment.activity?.startService(intent)
             }
         })

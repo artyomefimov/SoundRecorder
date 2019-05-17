@@ -2,10 +2,9 @@ package com.artyomefimov.soundrecorder.fragments.recordfragment
 
 import android.os.Environment
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.services.playservice.PlayService
 import com.artyomefimov.soundrecorder.services.recordservice.RecordService
 
-object Controller {
+object RecordController {
     private var isFirst = true
     lateinit var state: RecordButtonState
 
@@ -15,7 +14,6 @@ object Controller {
     }
 
     private var isRecording = false
-    private var isPlaying = false
     var outputFilePath: String? = null
         set(folderPath) {
             field = "$folderPath"
@@ -25,7 +23,7 @@ object Controller {
         if (isFirst) {
             outputFilePath = Environment.getExternalStorageDirectory().absolutePath
             state =
-                Controller.RecordButtonState.STOPPED
+                RecordController.RecordButtonState.STOPPED
             isFirst = false
         }
     }
@@ -40,22 +38,15 @@ object Controller {
         }
     }
 
-    fun getNewPlayAction(): String {
-        return if (!isPlaying)
-            PlayService.ACTION_START_PLAY
-        else
-            PlayService.ACTION_STOP_PLAY
-    }
-
     private fun startRecording() {
         isRecording = true
         state =
-            Controller.RecordButtonState.STARTED
+            RecordController.RecordButtonState.STARTED
     }
 
     private fun stopRecording() {
         isRecording = false
         state =
-            Controller.RecordButtonState.STOPPED
+            RecordController.RecordButtonState.STOPPED
     }
 }
