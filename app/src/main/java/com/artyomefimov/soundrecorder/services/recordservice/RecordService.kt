@@ -18,6 +18,8 @@ class RecordService : Service() {
 
         const val ACTION_START_RECORD = "start_record"
         const val ACTION_STOP_RECORD = "stop_record"
+        const val ACTION_NOTIFICATION_STOP = "stop"
+
         const val FILE_PATH = "file_path"
     }
 
@@ -29,7 +31,7 @@ class RecordService : Service() {
         if (intent != null) {
             when (intent.action) {
                 ACTION_START_RECORD -> start(intent)
-                ACTION_STOP_RECORD -> stop()
+                ACTION_STOP_RECORD, ACTION_NOTIFICATION_STOP -> stop()
             }
         }
         return super.onStartCommand(intent, flags, startId)

@@ -35,7 +35,7 @@ class RecordFragment : Fragment() {
         var storageChooser =
             buildStorageChooserWithNewPath(Environment.getExternalStorageDirectory().absolutePath)
 
-        RecordController.init()
+        RecordController.init(null)
 
         updateButtonsState()
 
@@ -56,14 +56,15 @@ class RecordFragment : Fragment() {
 
                 intent.action = RecordController.getNewRecordAction()
 
-                updateButtonsState()
-
-                if (isNowNotRecording()) {
-                    this.activity?.startService(intent)
-                    showToastIfFinished()
-                } else {
-                    intent.putExtra(RecordService.FILE_PATH, RecordController.outputFilePath)
-                    this.activity?.startService(intent)
+                when (intent.action) {
+                    RecordService.ACTION_START_RECORD -> {
+                        intent.putExtra(RecordService.FILE_PATH, RecordController.outputFilePath)
+                        this.activity?.startService(intent)
+                    }
+                    RecordService.ACTION_STOP_RECORD -> {
+                        this.activity?.startService(intent)
+                        showFinishingToast()
+                    }
                 }
             } else {
                 this.activity?.toast(R.string.permissions_not_granted)
@@ -71,10 +72,28 @@ class RecordFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        RecordController.listener = object : ControllerStateListener {
+            override fun onStateChanged() {
+                updateButtonsState()
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        RecordController.listener = null
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             isPermissionGranted = true
         }
+    }
+
+    interface ControllerStateListener {
+        fun onStateChanged()
     }
 }

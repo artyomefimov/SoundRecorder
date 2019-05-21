@@ -27,7 +27,7 @@ internal fun RecordFragment.getStringWithFolderPath(path: String?): String =
     else
         resources.getString(R.string.text_view_recording, path)
 
-internal fun RecordFragment.showToastIfFinished() {
+internal fun RecordFragment.showFinishingToast() {
     this.activity?.toast(R.string.recording_finished)
 }
 
@@ -63,7 +63,7 @@ internal fun RecordFragment.buildStorageChooserWithNewPath(path: String?): Stora
 
 internal fun RecordFragment.requestPermissionsIfNeeded() {
     if (isPermissionNotGranted(Manifest.permission.RECORD_AUDIO)
-        && isPermissionNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        || isPermissionNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     ) {
         val permissions = arrayOf(
             Manifest.permission.RECORD_AUDIO,
@@ -71,8 +71,7 @@ internal fun RecordFragment.requestPermissionsIfNeeded() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
-        ActivityCompat.requestPermissions(
-            this.activity as Activity,
+        requestPermissions(
             permissions,
             PERMISSIONS_REQUEST_CODE
         )

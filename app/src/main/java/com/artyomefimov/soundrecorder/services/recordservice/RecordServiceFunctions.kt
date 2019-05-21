@@ -13,6 +13,7 @@ import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.activity.RecordActivity
 import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordController
 import com.artyomefimov.soundrecorder.services.getNameAccordingToDate
+import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Companion.ACTION_NOTIFICATION_STOP
 import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Companion.TAG
 import java.io.IOException
 
@@ -35,6 +36,11 @@ internal fun RecordService.createNotification(): Notification {
         .setContentTitle(resources.getString(R.string.recording_in_progress))
         .setSmallIcon(R.mipmap.ic_launcher_foreground)
         .setAutoCancel(false)
+        .addAction(
+            R.drawable.ic_media_stop,
+            resources.getString(R.string.stop),
+            createNotificationActionIntent(ACTION_NOTIFICATION_STOP)
+        )
         .build()
 }
 
@@ -50,6 +56,12 @@ private fun RecordService.createNotificationChannel() {
     }
 }
 
+internal fun RecordService.createNotificationActionIntent(action: String): PendingIntent {
+    val intent = Intent(this, RecordService::class.java)
+    intent.action = action
+    return PendingIntent.getService(this, 0, intent, 0)
+}
+
 internal fun RecordService.startRecording(filePath: String) {
     try {
         resetMediaRecorder(filePath)
@@ -57,10 +69,10 @@ internal fun RecordService.startRecording(filePath: String) {
             prepare()
             start()
         }
+        RecordController.startRecording()
     } catch (e: IOException) {
-        Log.e(TAG, "Could not start recording!\n$e")
-        RecordController.state =
-            RecordController.RecordButtonState.STOPPED
+        Log.e(TAG, "Could not start recording! $e")
+        RecordController.stopRecording()
     }
     Log.i(TAG, "Recording was started!")
 }
@@ -86,8 +98,7 @@ internal fun RecordService.stopRecording() {
     }
     mediaRecorder = null
 
-    RecordController.state =
-        RecordController.RecordButtonState.STOPPED
+    RecordController.stopRecording()
 
     Log.i(TAG, "Recording was stopped!")
 }

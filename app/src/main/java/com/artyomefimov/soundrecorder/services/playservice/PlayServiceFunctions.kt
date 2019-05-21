@@ -18,6 +18,8 @@ import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.CHANNEL_NAME
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.REQUEST_CODE_ACTIVITY
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.TAG
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 internal fun PlayService.createNotification(fileName: String): Notification {
     val intent = Intent(this, RecordActivity::class.java)
@@ -75,7 +77,8 @@ private fun PlayService.createNotificationChannel() {
     }
 }
 
-internal fun PlayService.startPlaying(filePath: String) {
+internal fun PlayService.startPlaying(filePath: String) = launch {
+    delay(200)
     mediaPlayer?.let {
         if (it.isPlaying)
             stopPlaying()
@@ -85,6 +88,9 @@ internal fun PlayService.startPlaying(filePath: String) {
         setDataSource(filePath)
         prepare()
         start()
+        setOnCompletionListener {
+            stopService()
+        }
     }
     Log.i(TAG, "Playing was started!")
 }

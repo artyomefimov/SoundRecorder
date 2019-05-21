@@ -18,5 +18,5 @@ fun fetchMusicFilesFromFolder(folderPath: File): List<FileInfo> {
                 musicFiles.add(FileInfo(filename, folderPath.absolutePath))
         }
     }
-    return musicFiles
+    return musicFiles.reversed()
 }

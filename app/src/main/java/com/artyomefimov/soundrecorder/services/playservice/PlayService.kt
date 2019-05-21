@@ -5,9 +5,14 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
-class PlayService : Service() {
+class PlayService : Service(), CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Default
     internal var mediaPlayer: MediaPlayer? = null
 
     companion object {
@@ -34,10 +39,9 @@ class PlayService : Service() {
         if (intent != null) {
             when (intent.action) {
                 ACTION_START_PLAY -> start(intent)
-                ACTION_STOP_PLAY -> stop()
+                ACTION_STOP_PLAY, ACTION_NOTIFICATION_STOP -> stop()
                 ACTION_NOTIFICATION_PAUSE -> pausePlaying()
                 ACTION_NOTIFICATION_PLAY -> continuePlaying()
-                ACTION_NOTIFICATION_STOP -> stopService()
             }
         }
         return super.onStartCommand(intent, flags, startId)

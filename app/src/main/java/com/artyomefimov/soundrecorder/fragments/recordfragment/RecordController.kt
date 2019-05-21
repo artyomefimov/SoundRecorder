@@ -18,35 +18,38 @@ object RecordController {
         set(folderPath) {
             field = "$folderPath"
         }
+    var listener: RecordFragment.ControllerStateListener? = null
 
-    fun init() {
+    fun init(listener: RecordFragment.ControllerStateListener?) {
         if (isFirst) {
             outputFilePath = Environment.getExternalStorageDirectory().absolutePath
             state =
                 RecordController.RecordButtonState.STOPPED
             isFirst = false
+
+            this.listener = listener
         }
     }
 
     fun getNewRecordAction(): String {
         return if (!isRecording) {
-            startRecording()
             RecordService.ACTION_START_RECORD
         } else {
-            stopRecording()
             RecordService.ACTION_STOP_RECORD
         }
     }
 
-    private fun startRecording() {
+    fun startRecording() {
         isRecording = true
         state =
             RecordController.RecordButtonState.STARTED
+        listener?.onStateChanged()
     }
 
-    private fun stopRecording() {
+    fun stopRecording() {
         isRecording = false
         state =
             RecordController.RecordButtonState.STOPPED
+        listener?.onStateChanged()
     }
 }
