@@ -12,14 +12,16 @@ import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordController
 import com.artyomefimov.soundrecorder.model.FileInfo
 import com.artyomefimov.soundrecorder.services.playservice.PlayService
 import kotlinx.android.synthetic.main.files_fragment.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
-class FilesFragment : Fragment() {
+class FilesFragment : Fragment(), CoroutineScope {
     private var files: List<FileInfo> = ArrayList()
+
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.files_fragment, container, false)
@@ -39,6 +41,11 @@ class FilesFragment : Fragment() {
         fetchFiles()
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        coroutineContext.cancelChildren()
+    }
+
     private fun playSelectedFile(fileInfo: FileInfo) {
         val intent = Intent(this@FilesFragment.activity, PlayService::class.java)
         intent.action = PlayService.ACTION_START_PLAY
@@ -49,7 +56,7 @@ class FilesFragment : Fragment() {
         this@FilesFragment.activity?.startService(intent)
     }
 
-    private fun fetchFiles() = CoroutineScope(Dispatchers.Main).launch {
+    private fun fetchFiles() = launch {
         withContext(Dispatchers.IO) {
             files = fetchMusicFilesFromFolder(File(RecordController.outputFilePath))
         }
