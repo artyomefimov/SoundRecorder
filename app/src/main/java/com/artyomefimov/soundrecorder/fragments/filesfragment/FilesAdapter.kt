@@ -8,7 +8,7 @@ import com.artyomefimov.soundrecorder.R
 import com.artyomefimov.soundrecorder.model.FileInfo
 import kotlinx.android.synthetic.main.list_item_file.view.*
 
-class FilesAdapter(private val files: List<FileInfo>, private val listener: Listener) :
+class FilesAdapter(var files: List<FileInfo>, private val listener: Listener) :
     RecyclerView.Adapter<FilesAdapter.FilesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesViewHolder {
