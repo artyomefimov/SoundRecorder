@@ -10,7 +10,7 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.activity.RecordActivity
+import com.artyomefimov.soundrecorder.activity.MainActivity
 import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordController
 import com.artyomefimov.soundrecorder.services.getNameAccordingToDate
 import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Companion.ACTION_NOTIFICATION_STOP
@@ -18,7 +18,7 @@ import com.artyomefimov.soundrecorder.services.recordservice.RecordService.Compa
 import java.io.IOException
 
 internal fun RecordService.createNotification(): Notification {
-    val intent = Intent(this, RecordActivity::class.java)
+    val intent = Intent(this, MainActivity::class.java)
 
     val pendingIntent =
         PendingIntent.getActivity(

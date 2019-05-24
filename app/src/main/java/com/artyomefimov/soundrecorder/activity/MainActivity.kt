@@ -8,7 +8,7 @@ import com.artyomefimov.soundrecorder.fragments.filesfragment.FilesFragment
 import com.artyomefimov.soundrecorder.fragments.recordfragment.RecordFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class RecordActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private val fragmentManager = supportFragmentManager
 
     companion object {

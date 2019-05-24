@@ -10,7 +10,7 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.artyomefimov.soundrecorder.R
-import com.artyomefimov.soundrecorder.activity.RecordActivity
+import com.artyomefimov.soundrecorder.activity.MainActivity
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_PAUSE
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_PLAY
 import com.artyomefimov.soundrecorder.services.playservice.PlayService.Companion.ACTION_NOTIFICATION_STOP
@@ -22,8 +22,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal fun PlayService.createNotification(fileName: String): Notification {
-    val intent = Intent(this, RecordActivity::class.java)
-    intent.action = RecordActivity.PLAYING
+    val intent = Intent(this, MainActivity::class.java)
+    intent.action = MainActivity.PLAYING
 
     val pendingIntent =
         PendingIntent.getActivity(
